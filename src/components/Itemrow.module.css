@@ -1,0 +1,16 @@
+.item{
+  padding: 10px;
+  display: flex;
+  justify-content: space-around;
+}
+.name{
+  flex:3;
+}
+.btnbox{
+  flex:1;
+}
+.hr{
+  width: 90%;
+  margin: auto;
+  border-top: 2px dashed  red;
+}

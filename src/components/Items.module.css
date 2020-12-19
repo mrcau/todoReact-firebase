@@ -1,0 +1,22 @@
+.Items{
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+.main{
+  flex: 1;
+}
+.bottom{
+  display: flex;
+  width:100%;
+}
+.input{
+  flex: 1;
+  border:none;
+  padding:5px;
+  outline: none;
+}
+.btnadd{
+  background: red;
+  font-weight: 900;
+}
