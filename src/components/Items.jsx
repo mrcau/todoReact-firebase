@@ -5,17 +5,19 @@ import datas from '../data'
 import { useLocation } from 'react-router-dom';
 
 const Items = ({authService}) => {
+  
+  useEffect(() => {authService.saveCard(fid,Datas);} );
   const fid = useLocation().state.id;
   const [Datas, setDatas] = useState(datas);
   const [todoCount, setTodoCount] = useState(0);
   const inputRef = useRef();
   const name = '홍길동'
   const today = new Date().toLocaleDateString();
-  useEffect(() => {authService.saveCard(fid,Datas);} );
   
   const add = () => {
     const nowValue = inputRef.current.value
-    authService.sync();
+    const value = authService.sync();
+    console.log(value);
     if (!nowValue) {
       return;
     }
