@@ -4,20 +4,28 @@ import style from './Items.module.css';
 import datas from '../data'
 import { useLocation } from 'react-router-dom';
 
-const Items = ({authService}) => {
-  
-  useEffect(() => {authService.saveCard(fid,Datas);} );
+const Items = ({ authService }) => {
+
+  useEffect(() => {
+    async function save(){
+      authService.saveCard(fid, Datas);
+    }
+    save().then(() => {
+      const value = authService.sync();
+      console.log(value);
+    })
+    
+  });
+
   const fid = useLocation().state.id;
   const [Datas, setDatas] = useState(datas);
   const [todoCount, setTodoCount] = useState(0);
   const inputRef = useRef();
   const name = '홍길동'
   const today = new Date().toLocaleDateString();
-  
+
   const add = () => {
     const nowValue = inputRef.current.value
-    const value = authService.sync();
-    console.log(value);
     if (!nowValue) {
       return;
     }
@@ -29,15 +37,16 @@ const Items = ({authService}) => {
       count: 0
     };
 
-    setTodoCount(todoCount+1);
+    setTodoCount(todoCount + 1);
     inputRef.current.value = '';
     inputRef.current.focus();
-    
+
     setDatas({ ...Datas, [keyId]: newdata });
+
   }
 
   const keyPress = (e) => {
-    e.key==='Enter'&& add();
+    e.key === 'Enter' && add();
   }
 
   return (
@@ -52,7 +61,7 @@ const Items = ({authService}) => {
         }
       </div>
       <div className={style.bottom}>
-        <input ref={inputRef} className={style.input} type="text" onKeyPress={keyPress}/>
+        <input ref={inputRef} className={style.input} type="text" onKeyPress={keyPress} />
         <button claaName={style.btnadd} onClick={add}>ADzD</button>
       </div>
     </div>

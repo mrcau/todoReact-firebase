@@ -37,9 +37,12 @@ class AuthService {
 
   sync() {
     const userId = firebaseApp.auth().currentUser.uid;
-     firebaseApp.database().ref(`${userId}/cards`).once('value')
-     .then((e) => { const value = e.val();
-     return value });
+    firebaseApp.database().ref(`${userId}/cards`).once('value')
+      .then((e) => {
+        const value = e.val();
+        console.log(value);
+        return value;
+      });
   }
 
 }
