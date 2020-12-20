@@ -20,30 +20,23 @@ class AuthService {
     firebase.auth().onAuthStateChanged(e => { cf(e); })
   }
 
-  saveCard(userId, Datas) {
-    firebaseApp.database().ref(`${userId}/cards`).set(Datas);
-  }
   removeCard(userId, card) {
     firebaseApp.database().ref(`${userId}/cards/${card.id}`).remove();
   }
-  // sync(userId,onUpdate){
-  //   const ref = firebaseApp.database().ref(`${userId}/cards`);
-  //   ref.on('value',snapshot=>{
-  //     const value = snapshot.val();
-  //     value && onUpdate(value);
-  //   });
-  //   return () => ref.off();
-  // }
 
-  sync() {
-    const userId = firebaseApp.auth().currentUser.uid;
-    firebaseApp.database().ref(`${userId}/cards`).once('value')
-      .then((e) => {
-        const value = e.val();
-        console.log(value);
-        return value;
-      });
+  saveCard(userId, Datas) {
+    firebaseApp.database().ref(`${userId}/cards`).set(Datas);
   }
+
+
+  sync1(userId, onUpdate) {
+    firebaseApp.database().ref(`${userId}/cards`).on('value', (p) => {
+      const value = p.val();
+      console.log(value);
+      onUpdate(value);
+    })
+  }
+
 
 }
 

@@ -5,20 +5,14 @@ import datas from '../data'
 import { useLocation } from 'react-router-dom';
 
 const Items = ({ authService }) => {
+  const userId = useLocation().state.id;
+  const [Datas, setDatas] = useState(datas);
 
   useEffect(() => {
-    async function save(){
-      authService.saveCard(fid, Datas);
-    }
-    save().then(() => {
-      const value = authService.sync();
-      console.log(value);
-    })
-    
+    authService.saveCard(userId, Datas);
   });
 
-  const fid = useLocation().state.id;
-  const [Datas, setDatas] = useState(datas);
+
   const [todoCount, setTodoCount] = useState(0);
   const inputRef = useRef();
   const name = '홍길동'
@@ -43,6 +37,11 @@ const Items = ({ authService }) => {
 
     setDatas({ ...Datas, [keyId]: newdata });
 
+    authService.sync1(userId,(e) => {
+      console.log(e);
+    });
+    
+    
   }
 
   const keyPress = (e) => {
