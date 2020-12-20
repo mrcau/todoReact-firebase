@@ -1,28 +1,29 @@
 import React, { useEffect, useRef, useState } from 'react';
 import Itemrow from './Itemrow';
 import style from './Items.module.css';
-import datas from '../data'
 import { useLocation } from 'react-router-dom';
 
 const Items = ({ authService }) => {
+
   const userId = useLocation().state.id;
-  const [Datas, setDatas] = useState(datas);
-
-  useEffect(() => {
-    authService.saveCard(userId, Datas);
-  });
-
-
-  const [todoCount, setTodoCount] = useState(0);
   const inputRef = useRef();
   const name = '홍길동'
   const today = new Date().toLocaleDateString();
+  const [Datas, setDatas] = useState({});
+  const [todoCount, setTodoCount] = useState(0);
+
+  useEffect(() => {
+    if (!userId) {  return;  }
+    const stopSync = authService.sync(userId, (data) => {
+      setDatas(data);
+    });
+    return () => stopSync();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [userId]);
 
   const add = () => {
     const nowValue = inputRef.current.value
-    if (!nowValue) {
-      return;
-    }
+    if (!nowValue) { return; }
     const keyId = Date.now();
     const newdata = {
       ...Object.values(Datas)[0],
@@ -30,18 +31,11 @@ const Items = ({ authService }) => {
       title: nowValue,
       count: 0
     };
-
     setTodoCount(todoCount + 1);
+    setDatas({ ...Datas, [keyId]: newdata });
+    authService.saveCard(userId, Datas);
     inputRef.current.value = '';
     inputRef.current.focus();
-
-    setDatas({ ...Datas, [keyId]: newdata });
-
-    authService.sync1(userId,(e) => {
-      console.log(e);
-    });
-    
-    
   }
 
   const keyPress = (e) => {
