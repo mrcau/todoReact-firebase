@@ -15,6 +15,7 @@ const Items = ({authService}) => {
   
   const add = () => {
     const nowValue = inputRef.current.value
+    authService.sync();
     if (!nowValue) {
       return;
     }
