@@ -20,7 +20,7 @@ class AuthService {
   onAuth(cf) { firebase.auth().onAuthStateChanged(e => { cf(e); })  }
 
   removeCard(userId, card) {
-    firebaseApp.database().ref(`${userId}/cards/${card.id}`).remove();
+    firebaseApp.database().ref(`${userId}/cards/${card}`).remove();
   }
 
   saveCard(userId, Datas) {

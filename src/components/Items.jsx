@@ -1,10 +1,13 @@
 import React, { useEffect, useRef, useState } from 'react';
 import Itemrow from './Itemrow';
 import style from './Items.module.css';
-import { useLocation } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
 
 const Items = ({ authService }) => {
-
+  const history = useHistory();
+  useEffect(() => {
+    authService.onAuth(user => { !user && history.push('/'); })
+  })
   const userId = useLocation().state.id;
   const inputRef = useRef();
   const name = '홍길동'
@@ -13,17 +16,17 @@ const Items = ({ authService }) => {
   const [todoCount, setTodoCount] = useState(0);
 
   useEffect(() => {
-    if (!userId) {  return;  }
     const stopSync = authService.sync(userId, (data) => {
       setDatas(data);
     });
+
     return () => stopSync();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userId]);
 
   const add = () => {
     const nowValue = inputRef.current.value
     if (!nowValue) { return; }
+
     const keyId = Date.now();
     const newdata = {
       ...Object.values(Datas)[0],
@@ -32,10 +35,19 @@ const Items = ({ authService }) => {
       count: 0
     };
     setTodoCount(todoCount + 1);
-    setDatas({ ...Datas, [keyId]: newdata });
-    authService.saveCard(userId, Datas);
     inputRef.current.value = '';
     inputRef.current.focus();
+
+    update(Datas, newdata, keyId)
+  }
+
+  const update = (data, newdata, keyId) => {
+    setDatas(() => {
+      const upData = { ...data, [keyId]: newdata }
+      authService.saveCard(userId, upData);
+
+      return upData;
+    });
   }
 
   const keyPress = (e) => {
@@ -50,7 +62,16 @@ const Items = ({ authService }) => {
       <div className={style.main}>
         {
           Object.keys(Datas).map(e =>
-            <Itemrow data={Datas[e]} id={e} setTodoCount={setTodoCount} todoCount={todoCount} setDatas={setDatas} Datas={Datas} />)
+            <Itemrow
+              data={Datas[e]}
+              id={e}
+              setTodoCount={setTodoCount}
+              todoCount={todoCount}
+              setDatas={setDatas}
+              Datas={Datas}
+              userId={userId}
+              authService={authService}
+            />)
         }
       </div>
       <div className={style.bottom}>
