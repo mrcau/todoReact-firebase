@@ -1,7 +1,7 @@
 import React from 'react';
 import style from './Itemrow.module.css';
 
-const Itemrow = ({userId,id,data,Datas,setDatas,setTodoCount,todoCount,authService}) => {
+const Itemrow = ({userId,id,data,Datas,setDatas,setTodoCount,todoCount,authService,idToday}) => {
   const dataC={...data};
   const datasC={...Datas};
 
@@ -9,21 +9,20 @@ const Itemrow = ({userId,id,data,Datas,setDatas,setTodoCount,todoCount,authServi
     dataC.count++;
     datasC[data.id]=dataC;
     setDatas(datasC);
-    authService.saveCard(userId, datasC);
+    authService.saveCard(userId,idToday, datasC);
   }
   
   const minus = () => {
     data.count>0 && dataC.count--;
     datasC[data.id]=dataC;
     setDatas(datasC);
-    authService.saveCard(userId, datasC);
+    authService.saveCard(userId,idToday, datasC);
   }
 
   const del = () => {
     delete datasC[data.id];
-    todoCount>0 && setTodoCount(todoCount-1);
     setDatas(datasC);
-    authService.removeCard(userId,data.id)
+    authService.removeCard(userId,idToday,data.id)
     console.log(data.id)
   }
 

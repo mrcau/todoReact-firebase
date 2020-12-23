@@ -17,18 +17,18 @@ class AuthService {
 
   logout() { firebase.auth().signOut(); }
 
-  onAuth(cf) { firebase.auth().onAuthStateChanged(e => { cf(e); })  }
+  onAuth(cf) { firebase.auth().onAuthStateChanged(e => { cf(e); console.log(e)})  }
 
-  removeCard(userId, card) {
-    firebaseApp.database().ref(`${userId}/cards/${card}`).remove();
+  removeCard(userId,idToday, card) {
+    firebaseApp.database().ref(`${userId}/${idToday}/${card}`).remove();
   }
 
-  saveCard(userId, Datas) {
-    firebaseApp.database().ref(`${userId}/cards`).set(Datas);
+  saveCard(userId,idToday, Datas) {
+    firebaseApp.database().ref(`${userId}/${idToday}`).set(Datas);
   }
 
-  sync(userId, call) {
-    const ref = firebaseApp.database().ref(`${userId}/cards`)
+  sync(userId,idToday, call) {
+    const ref = firebaseApp.database().ref(`${userId}/${idToday}`)
     ref.on('value', (p) => {
       const data = p.val();
       data && call(data);
